@@ -10,13 +10,13 @@ width,height = 1024,768
 cam = uc480.uc480()
 
 screen = pygame.display.set_mode([width,height],pygame.FULLSCREEN)
-cut = 10
+cut = 20
 
 SLMPix = np.zeros((width,height))
 
-val = [x for x in range(0,256,120)]
-lines = [300,700]
-
+val = [x for x in range(0,256,1)]
+lines = [250,700]
+lines = [700,250]
 
 phase = []
 for a in val:
@@ -29,20 +29,22 @@ for a in val:
     img = cam.acquire()
     cam.disconnect()
     phi=[]
+    peak = -1
     for b in lines:
         row = img[b,:]
         rowFT = np.fft.fft(row)
         rowFT[:cut] = 0
-        rowFT[30:] = 0
-        peak = np.argmax(np.abs(rowFT))
+        rowFT[40:] = 0
+        if peak == -1:
+            peak = np.argmax(np.abs(rowFT))
         print(peak)
         phiN = np.log(2*rowFT[peak]).imag
         phi.append(phiN)
     dphi = phi[1]-phi[0]
     waveshift = dphi/(2*np.pi)
     phase.append(waveshift)
-for a in val:
-    of.write(str(a)+'\t'+str(phase[a])+'\n')
+for ca,a in enumerate(val):
+    of.write(str(a)+'\t'+str(phase[ca])+'\n')
 of.close()
 plt.scatter(val,phase)
 plt.show()
