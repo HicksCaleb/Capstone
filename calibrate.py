@@ -16,7 +16,7 @@ SLMPix = np.zeros((width,height))
 
 val = [x for x in range(0,256,1)]
 lines = [250,700]
-lines = [650,250]
+lines = [750,150]
 
 phase = []
 for a in val:
@@ -24,10 +24,10 @@ for a in val:
     draw = np.stack((SLMPix,)*3,axis=2)
     pygame.surfarray.blit_array(screen,draw)
     pygame.display.flip()
-    time.sleep(0.3)
+    time.sleep(1)
     cam = uc480.uc480()
     cam.connect()
-    img = cam.acquire(1000)
+    img = cam.acquire(30)
     cam.disconnect()
     phi=[]
     peak = -1
